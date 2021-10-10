@@ -11,6 +11,9 @@ app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
 
+// 引入数据模块
+require('./model')
+
 // 引入路由中间件
 app.use('/api', require('./routes'))
 
