@@ -1,31 +1,36 @@
 /**
  * 文章
  */
-const router = require('express').Router()
+const router = require("express").Router();
+
+const { articleValidator } = require("../model/articles");
+const validator = require("../middleware/validate");
+
+const article = require("../controller/articles");
+
+const auth = require("../middleware/auth");
 
 // 获取全部
-router.get('/', (req, res, next) => {
-  res.send('获取全部文章')
-})
+router.get("/", auth, article.getAll);
 
 // 获取单个文章
-router.get('/:articleId', (req, res, next) => {
-  res.send(`获取文章${req.params.articleId}`)
-})
+router.get("/:articleId", auth, article.get);
 
 // 添加文章
-router.post('/', (req, res, next) => {
-  res.send('添加文章')
-})
+router.post(
+  "/",
+  [auth, validator(articleValidator)],
+  article.create
+);
 
 // 编辑文章
-router.put('/:articleId', (req, res, next) => {
-  res.send(`编辑文章${req.params.articleId}`)
-})
+router.put(
+  "/:articleId",
+  [auth, validator(articleValidator)],
+  article.update
+);
 
 // 删除文章
-router.delete('/:articleId', (req, res, next) => {
-  res.send(`删除文章${req.params.articleId}`)
-})
+router.delete("/:articleId", auth, article.remove);
 
-module.exports = router
+module.exports = router;

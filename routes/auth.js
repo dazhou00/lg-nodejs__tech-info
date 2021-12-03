@@ -1,10 +1,13 @@
 /**
  * 登录
  */
-const router = require('express').Router()
+const router = require("express").Router();
+
+const auth = require("../controller/auth");
+
+const validator = require("../middleware/validate");
+const { userValidator } = require("../model/user");
 
 // 登录
-router.post('/', (req, res, next) => {
-  res.send('用户登录')
-})
-module.exports = router
+router.post("/", validator(userValidator), auth.test);
+module.exports = router;
