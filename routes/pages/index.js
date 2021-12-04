@@ -6,12 +6,42 @@ const { Article} = require('../../model/articles')
 
 // 首页路由与分类路由
 Router.get(['/','/:cid'], async (req, res) =>{
+    // 读取数据库，获取分类数据
+    const cate = await Category.find()
+
+    const current = req.params.cid
+    const options = {
+        status: 'published'
+    }
+
+    if(current){
+        options.category = current
+    }
+
+    const article = await Article.find(options).populate('category author', 'name')
     
-    res.render('index.html')
+    // 将数据传递给模板引擎
+    res.render('index.html',{
+        cate,
+        current,
+        article
+    })
 })
 
 Router.get('/articles/:articleId', async (req, res) => {
-    res.render('article.html')
+    // 处理 current
+    const current = '非首页无需显示'
+    // 获取分类数据
+    const cate = await Category.find()
+    // 获取文章数据
+    const article = await Article.findById(req.params.articleId).populate('category author', 'name')
+
+    // 将数据传递给模板引擎
+    res.render('article.html',{
+        cate,
+        current,
+        article
+    })
 })
 
 module.exports = Router
